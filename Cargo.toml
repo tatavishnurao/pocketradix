@@ -1,0 +1,9 @@
+[workspace]
+members = ["crates/radix-core"]
+resolver = "2"
+
+[workspace.package]
+edition = "2024"
+license = "Apache-2.0"
+repository = "https://github.com/tatavishnurao/pocketradix"
+rust-version = "1.100.0"
