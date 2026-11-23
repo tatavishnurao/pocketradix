@@ -1,8 +1,8 @@
 //! Property tests: `RadixTree` must agree with the `Oracle` model.
 
-mod oracle;
+mod common;
 
-use oracle::Oracle;
+use common::Oracle;
 use proptest::prelude::*;
 use radix_core::tree::RadixTree;
 
@@ -18,12 +18,12 @@ proptest! {
         let mut oracle = Oracle::new();
         let mut tree = RadixTree::new();
         for s in &seqs {
-            oracle.insert(s.clone());
+            oracle.insert(s);
             tree.insert(s, s);
         }
         prop_assert_eq!(
             tree.match_prefix(&query).matched_tokens,
-            oracle.longest_common_prefix(&query)
+            oracle.longest_match(&query)
         );
     }
 }

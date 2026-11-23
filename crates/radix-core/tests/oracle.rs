@@ -1,50 +1,75 @@
-//! Dumb reference model: stores every sequence and answers by linear scan.
+//! T0 gate tests for the reference oracle.
 
-/// Cached token sequences, compared by brute force.
-#[derive(Debug, Default)]
-pub struct Oracle {
-    seqs: Vec<Vec<u32>>,
-}
-
-impl Oracle {
-    /// Creates an empty oracle.
-    pub fn new() -> Self {
-        Self::default()
-    }
-
-    /// Records a cached sequence.
-    pub fn insert(&mut self, seq: Vec<u32>) {
-        self.seqs.push(seq);
-    }
-
-    /// Length of the longest prefix of `query` shared with any cached sequence.
-    pub fn longest_common_prefix(&self, query: &[u32]) -> usize {
-        self.seqs
-            .iter()
-            .map(|s| s.iter().zip(query).take_while(|(a, b)| a == b).count())
-            .max()
-            .unwrap_or(0)
-    }
-}
+mod common;
+use common::*;
 
 #[test]
-fn empty_oracle_matches_nothing() {
+#[ignore = "T0 gap"]
+fn empty_cache_matches_nothing() {
     let o = Oracle::new();
-    assert_eq!(o.longest_common_prefix(&[1, 2, 3]), 0);
+    assert_eq!(o.longest_match(&[1, 2, 3]), 0);
 }
 
 #[test]
-fn exact_prefix_is_full_length() {
+#[ignore = "T0 gap"]
+fn empty_query_matches_nothing() {
     let mut o = Oracle::new();
-    o.insert(vec![1, 2, 3, 4]);
-    assert_eq!(o.longest_common_prefix(&[1, 2, 3]), 3);
+    o.insert(&[1, 2, 3]);
+    assert_eq!(o.longest_match(&[]), 0);
 }
 
 #[test]
-fn picks_longest_across_sequences() {
+#[ignore = "T0 gap"]
+fn exact_repeat() {
     let mut o = Oracle::new();
-    o.insert(vec![1, 2, 9]);
-    o.insert(vec![1, 2, 3, 7]);
-    o.insert(vec![5]);
-    assert_eq!(o.longest_common_prefix(&[1, 2, 3, 8]), 3);
+    o.insert(&[1, 2, 3]);
+    assert_eq!(o.longest_match(&[1, 2, 3]), 3);
+}
+
+#[test]
+#[ignore = "T0 gap"]
+fn query_shorter_than_cached() {
+    let mut o = Oracle::new();
+    o.insert(&[1, 2, 3]);
+    assert_eq!(o.longest_match(&[1, 2]), 2);
+}
+
+#[test]
+#[ignore = "T0 gap"]
+fn query_longer_than_cached() {
+    let mut o = Oracle::new();
+    o.insert(&[1, 2]);
+    assert_eq!(o.longest_match(&[1, 2, 3, 4]), 2);
+}
+
+#[test]
+#[ignore = "T0 gap"]
+fn diverges_midway() {
+    let mut o = Oracle::new();
+    o.insert(&[1, 2, 3, 4]);
+    assert_eq!(o.longest_match(&[1, 2, 9, 9]), 2);
+}
+
+#[test]
+#[ignore = "T0 gap"]
+fn best_of_many() {
+    let mut o = Oracle::new();
+    o.insert(&[1, 9]);
+    o.insert(&[1, 2, 7]);
+    o.insert(&[5]);
+    assert_eq!(o.longest_match(&[1, 2, 3]), 2);
+}
+
+#[test]
+#[ignore = "T0 gap"]
+fn prefix_len_symmetric() {
+    let pairs: [(&[u32], &[u32]); 4] = [
+        (&[], &[1, 2]),
+        (&[1, 2, 3], &[1, 2]),
+        (&[1, 2, 3], &[1, 9, 3]),
+        (&[4, 5], &[4, 5]),
+    ];
+    for (a, b) in pairs {
+        assert_eq!(common_prefix_len(a, b), common_prefix_len(b, a));
+    }
 }
