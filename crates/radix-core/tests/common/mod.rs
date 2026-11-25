@@ -19,15 +19,15 @@ impl Oracle {
 
     /// Returns the longest common-prefix length between `query` and any stored sequence.
     pub fn longest_match(&self, query: &[u32]) -> usize {
-        let _ = query;
-        // GAP 2: return the largest common-prefix length between query and any stored sequence (0 if none)
-        todo!()
+        self.seqs
+            .iter()
+            .map(|s| common_prefix_len(s, query))
+            .max()
+            .unwrap_or(0)
     }
 }
 
 /// Returns the number of equal leading elements of `a` and `b`.
 pub fn common_prefix_len(a: &[u32], b: &[u32]) -> usize {
-    let _ = (a, b);
-    // GAP 1: count equal leading elements of a and b; stop at the first mismatch or the shorter end
-    todo!()
+    a.iter().zip(b).take_while(|(x, y)| x == y).count()
 }

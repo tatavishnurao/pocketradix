@@ -4,14 +4,12 @@ mod common;
 use common::*;
 
 #[test]
-#[ignore = "T0 gap"]
 fn empty_cache_matches_nothing() {
     let o = Oracle::new();
     assert_eq!(o.longest_match(&[1, 2, 3]), 0);
 }
 
 #[test]
-#[ignore = "T0 gap"]
 fn empty_query_matches_nothing() {
     let mut o = Oracle::new();
     o.insert(&[1, 2, 3]);
@@ -19,7 +17,6 @@ fn empty_query_matches_nothing() {
 }
 
 #[test]
-#[ignore = "T0 gap"]
 fn exact_repeat() {
     let mut o = Oracle::new();
     o.insert(&[1, 2, 3]);
@@ -27,7 +24,6 @@ fn exact_repeat() {
 }
 
 #[test]
-#[ignore = "T0 gap"]
 fn query_shorter_than_cached() {
     let mut o = Oracle::new();
     o.insert(&[1, 2, 3]);
@@ -35,7 +31,6 @@ fn query_shorter_than_cached() {
 }
 
 #[test]
-#[ignore = "T0 gap"]
 fn query_longer_than_cached() {
     let mut o = Oracle::new();
     o.insert(&[1, 2]);
@@ -43,7 +38,6 @@ fn query_longer_than_cached() {
 }
 
 #[test]
-#[ignore = "T0 gap"]
 fn diverges_midway() {
     let mut o = Oracle::new();
     o.insert(&[1, 2, 3, 4]);
@@ -51,7 +45,6 @@ fn diverges_midway() {
 }
 
 #[test]
-#[ignore = "T0 gap"]
 fn best_of_many() {
     let mut o = Oracle::new();
     o.insert(&[1, 9]);
@@ -61,7 +54,6 @@ fn best_of_many() {
 }
 
 #[test]
-#[ignore = "T0 gap"]
 fn prefix_len_symmetric() {
     let pairs: [(&[u32], &[u32]); 4] = [
         (&[], &[1, 2]),
